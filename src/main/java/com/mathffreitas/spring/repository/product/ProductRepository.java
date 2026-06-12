@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductRepository extends CrudRepositoryImpl<Product, Integer> {
-
+    // this repository is a class to extend the memory crud repository
 }

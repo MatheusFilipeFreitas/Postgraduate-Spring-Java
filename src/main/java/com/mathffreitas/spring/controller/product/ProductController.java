@@ -5,21 +5,28 @@ import com.mathffreitas.spring.dto.product.request.ProductCreateDto;
 import com.mathffreitas.spring.dto.product.request.ProductUpdateDto;
 import com.mathffreitas.spring.dto.product.response.ProductResponseDto;
 import com.mathffreitas.spring.service.common.CrudService;
-import com.mathffreitas.spring.service.product.implementation.ProductServiceImpl;
-import lombok.RequiredArgsConstructor;
+import com.mathffreitas.spring.service.product.ProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/products")
-@RequiredArgsConstructor
 public class ProductController extends CrudController<
         ProductCreateDto,
         ProductUpdateDto,
         ProductResponseDto,
         Integer> {
 
-    private final ProductServiceImpl service;
+    private final ProductService service;
+
+    public ProductController(
+            @Qualifier("productServiceV2")
+            // here is where is defined which implementation version will be used
+            ProductService productService
+    ) {
+        this.service = productService;
+    }
 
     @Override
     protected CrudService<
