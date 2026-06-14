@@ -3,16 +3,19 @@ package com.mathffreitas.spring.service.product.implementation;
 import com.mathffreitas.spring.dto.product.request.ProductCreateDto;
 import com.mathffreitas.spring.dto.product.request.ProductUpdateDto;
 import com.mathffreitas.spring.dto.product.response.ProductResponseDto;
+import com.mathffreitas.spring.model.error.NotAvailableContentException;
 import com.mathffreitas.spring.model.product.Product;
 import com.mathffreitas.spring.repository.product.ProductRepository;
 import com.mathffreitas.spring.service.product.ProductService;
-import com.mathffreitas.spring.utils.mapper.product.request.ProductCreateMapper;
-import com.mathffreitas.spring.utils.mapper.product.request.ProductUpdateMapper;
-import com.mathffreitas.spring.utils.mapper.product.response.ProductResponseMapper;
+import com.mathffreitas.spring.utils.constant.error.ErrorMessage;
+import com.mathffreitas.spring.utils.mapper.product.request.ProductCreateToEntityMapper;
+import com.mathffreitas.spring.utils.mapper.product.request.ProductUpdateToEntityMapper;
+import com.mathffreitas.spring.utils.mapper.product.response.ProductResponseToDtoMapper;
+import com.mathffreitas.spring.utils.versioning.version.ApiVersions;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +28,10 @@ import java.util.Optional;
  */
 @RequiredArgsConstructor
 public class ProductServiceImplV1 implements ProductService {
-    private final ProductCreateMapper createMapper;
-    private final ProductUpdateMapper updateMapper;
-    private final ProductResponseMapper responseMapper;
-    private final ProductRepository repository;
+    protected final ProductCreateToEntityMapper createMapper;
+    protected final ProductUpdateToEntityMapper updateMapper;
+    protected final ProductResponseToDtoMapper responseMapper;
+    protected final ProductRepository repository;
 
     @Override
     public ProductResponseDto create(ProductCreateDto productCreateDto) {
@@ -74,5 +77,10 @@ public class ProductServiceImplV1 implements ProductService {
     @Override
     public boolean delete(Integer integer) {
         return this.repository.delete(integer);
+    }
+
+    @Override
+    public BigDecimal getTotalPrices() {
+        throw new NotAvailableContentException(ErrorMessage.NO_AVAILABLE_CONTENT_FOR_VERSION + ApiVersions.V2.name());
     }
 }

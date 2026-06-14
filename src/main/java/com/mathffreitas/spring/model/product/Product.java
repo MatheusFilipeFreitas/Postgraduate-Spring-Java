@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 //@SuperBuilder -> (recommended for inheritance) generates a builder patter
 /*
@@ -22,8 +21,6 @@ import java.time.LocalDateTime;
 public class Product extends BaseIdModel {
     private String name;
     private BigDecimal price;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     public Product(Integer id, String name, BigDecimal price) {
         super(id);

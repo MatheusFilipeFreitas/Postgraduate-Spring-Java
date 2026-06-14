@@ -1,14 +1,21 @@
 package com.mathffreitas.spring.model.common;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-//@SuperBuilder -> (recommended for inheritance) generates a builder patter
-@AllArgsConstructor
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public abstract class BaseIdModel {
     protected Integer id;
+    protected LocalDateTime createdAt;
+    protected LocalDateTime updatedAt;
+
+    protected BaseIdModel() {
+    }
+
+    public BaseIdModel(Integer id) {
+        this.id = id;
+    }
 }

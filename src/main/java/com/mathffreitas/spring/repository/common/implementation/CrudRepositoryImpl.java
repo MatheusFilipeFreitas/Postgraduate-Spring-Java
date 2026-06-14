@@ -7,8 +7,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class CrudRepositoryImpl<T extends BaseIdModel, ID> implements CrudRepository<T, ID> {
-    private final LinkedHashMap<ID, T> memoryDatabase = new LinkedHashMap<>();
-    private final AtomicInteger sequenceGenerator = new AtomicInteger(1);
+    protected final LinkedHashMap<ID, T> memoryDatabase = new LinkedHashMap<>();
+    protected final AtomicInteger sequenceGenerator = new AtomicInteger(1);
 
     public Optional<T> findById(ID id) {
         return Optional.ofNullable(memoryDatabase.get(id));
@@ -21,8 +21,10 @@ public abstract class CrudRepositoryImpl<T extends BaseIdModel, ID> implements C
     @SuppressWarnings("unchecked")
     public T save(T entity) {
         Integer nextId = handleNextId();
-        ID id = (ID) nextId; // suppressed: in this case the id will be integer!
+        // suppressed: in this case the id will be integer!
+        ID id = (ID) entity.getId();
         if (entity.getId() == null) {
+            id = (ID) nextId;
             entity.setId(nextId);
         }
         memoryDatabase.put(id, entity);
@@ -32,9 +34,10 @@ public abstract class CrudRepositoryImpl<T extends BaseIdModel, ID> implements C
     @SuppressWarnings("unchecked")
     public Optional<T> update(T entity) {
         Optional<T> optinalEntity = this.findById((ID) entity.getId()); // suppressed: in this case the id will be integer!
-        if (optinalEntity.isPresent()) {
-            memoryDatabase.put((ID) entity.getId(), entity);
+        if (optinalEntity.isEmpty()) {
+            return Optional.empty();
         }
+        memoryDatabase.put((ID) entity.getId(), entity);
         return Optional.of(entity);
     }
 

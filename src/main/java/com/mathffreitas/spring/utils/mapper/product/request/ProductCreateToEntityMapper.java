@@ -1,14 +1,14 @@
 package com.mathffreitas.spring.utils.mapper.product.request;
 
 import com.mathffreitas.spring.dto.product.request.ProductCreateDto;
-import com.mathffreitas.spring.utils.mapper.common.BaseMapper;
+import com.mathffreitas.spring.utils.mapper.common.DtoToEntityMapper;
 import com.mathffreitas.spring.model.product.Product;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
-public class ProductCreateMapper implements BaseMapper<Product, ProductCreateDto> {
+public class ProductCreateToEntityMapper implements DtoToEntityMapper<Product, ProductCreateDto> {
 
     @Override
     public Product toEntity(ProductCreateDto productCreateDto) throws NoSuchMethodException {
@@ -19,10 +19,5 @@ public class ProductCreateMapper implements BaseMapper<Product, ProductCreateDto
         );
         product.setCreatedAt(LocalDateTime.now()); //only because this is in memory
         return product;
-    }
-
-    @Override
-    public ProductCreateDto toDto(Product product) throws NoSuchMethodException {
-        throw new NoSuchMethodException("Not implemented!");
     }
 }

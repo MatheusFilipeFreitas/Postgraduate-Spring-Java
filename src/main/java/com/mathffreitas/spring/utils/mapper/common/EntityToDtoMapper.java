@@ -1,6 +1,5 @@
 package com.mathffreitas.spring.utils.mapper.common;
 
-public interface BaseMapper<Entity, DTO> {
-    Entity toEntity(DTO dto) throws NoSuchMethodException;
+public interface EntityToDtoMapper<Entity, DTO> {
     DTO toDto(Entity entity) throws NoSuchMethodException;
 }

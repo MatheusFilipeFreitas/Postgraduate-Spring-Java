@@ -6,34 +6,39 @@ import com.mathffreitas.spring.dto.product.request.ProductUpdateDto;
 import com.mathffreitas.spring.dto.product.response.ProductResponseDto;
 import com.mathffreitas.spring.service.common.CrudService;
 import com.mathffreitas.spring.service.product.ProductService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.mathffreitas.spring.service.product.factory.ProductServiceFactory;
+import com.mathffreitas.spring.utils.versioning.ApiVersionResolver;
+import com.mathffreitas.spring.utils.versioning.version.ApiVersions;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
+@AllArgsConstructor
+
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/v{apiVersion}/products")
 public class ProductController extends CrudController<
         ProductCreateDto,
         ProductUpdateDto,
         ProductResponseDto,
         Integer> {
-
-    private final ProductService service;
-
-    public ProductController(
-            @Qualifier("productServiceV2")
-            // here is where is defined which implementation version will be used
-            ProductService productService
-    ) {
-        this.service = productService;
-    }
+    private final ProductServiceFactory productServiceFactory;
+    private final ApiVersionResolver apiVersionResolver;
+    private final HttpServletRequest request;
 
     @Override
-    protected CrudService<
-            ProductCreateDto,
-            ProductUpdateDto,
-            ProductResponseDto,
-            Integer> getService() {
-        return this.service;
+    protected ProductService getService() {
+        ApiVersions apiVersion = apiVersionResolver.resolve(request);
+        return productServiceFactory.forVersion(apiVersion);
+    }
+
+    @GetMapping("total-prices")
+    public ResponseEntity<BigDecimal> totalPrices() {
+        return ResponseEntity.ok(this.getService().getTotalPrices());
     }
 }
